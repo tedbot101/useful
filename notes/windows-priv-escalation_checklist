@@ -80,3 +80,6 @@ sc qc [service_name] (to verify!)
 net start [service_name]
 
 Mostly all of this taken from http://www.fuzzysecurity.com/tutorials/16.html
+
+tools repo:
+https://github.com/phackt/pentest/tree/master/privesc/windows

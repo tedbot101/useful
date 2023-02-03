@@ -27,3 +27,16 @@ sc start daclsvc
 
 
 #### DLL hijack ####
+
+check what dll file the service is calling through processmoinitor
+Looking for:
+1. dll file in the path where we can read and write
+2. the permission to stop and start the service
+3. Requires Admin permision
+
+
+Check if you have permission
+accesschk.exe -vwuc user dllsvc                # check if we have permision
+whoami /all 
+
+

